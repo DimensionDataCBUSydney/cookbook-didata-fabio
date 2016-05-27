@@ -8,4 +8,5 @@ default['fabio']['log_dir']      = '/var/log/fabio'
 
 # Installation source
 default['fabio']['release_url']  = 'https://github.com/eBay/fabio/releases/download/'
-default['fabio']['version']      = '1.0.8'
+default['fabio']['version']      = '1.1.3'
+default['fabio']['go_version']   = '1.6.2'

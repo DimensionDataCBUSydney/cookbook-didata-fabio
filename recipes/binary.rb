@@ -16,7 +16,7 @@
 
 url = [node['fabio']['release_url'],
        'v' + node['fabio']['version'],
-       "fabio-#{node['fabio']['version']}_linux-amd64"
+       "fabio-#{node['fabio']['version']}-go#{node['fabio']['go_version']}_linux-amd64"
       ].join('/')
 
 remote_file 'fabio_release_binary' do
