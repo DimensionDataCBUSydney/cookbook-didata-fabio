@@ -2,6 +2,7 @@ fabio cookbook
 ===================
 
 [![Build Status](https://travis-ci.org/ptqa/chef-fabio.svg?branch=master)](https://travis-ci.org/ptqa/chef-fabio)
+[![License](https://img.shields.io/badge/license-Apache_2-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 
 Chef cookbook to install & configure [fabio](https://github.com/eBay/fabio).
 
