@@ -1,7 +1,9 @@
 fabio cookbook
 ===================
 
-Chef cookbook to install & configure [fabio](https://github.com/eBay/fabio). This cookbooks is ***WORK IN PROGRESS***
+[![Build Status](https://travis-ci.org/ptqa/chef-fabio.svg?branch=master)](https://travis-ci.org/ptqa/chef-fabio)
+
+Chef cookbook to install & configure [fabio](https://github.com/eBay/fabio).
 
 Requirements
 ------------
@@ -22,7 +24,7 @@ Requirements
 # Attributes
 This cookbook is attribute driven. List of attributes that you can change:
 
-* `node['fabio']['version']`         - Release to install. Check [fabio github](https://github.com/eBay/fabio/releases) for available releases (default '1.0.8').
+* `node['fabio']['version']`         - Release to install. Check [fabio github](https://github.com/eBay/fabio/releases) for available releases (default '1.1.3').
 * `node['fabio']['conf_dir']`        - Configuration directory (default '/etc/fabio/')
 * `node['fabio']['config']`          - Set config file options via hash of attributes `{'proxy.addr' => ':9999'}` becomes `proxy.addr = :9999` (default '{}')
 * `node['fabio']['log_dir']`         - Logs directory (default '/var/log/fabio/')

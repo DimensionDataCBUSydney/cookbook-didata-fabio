@@ -27,3 +27,7 @@ end
 describe process('fabio') do
   it { should be_running }
 end
+
+describe command('curl -v -H "Host: example.service" 127.1:9999/') do
+  its(:stdout) { should match /google/ }
+end
