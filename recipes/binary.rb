@@ -14,14 +14,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-url = [node['fabio']['release_url'],
-       'v' + node['fabio']['version'],
-       "fabio-#{node['fabio']['version']}-go#{node['fabio']['go_version']}_linux-amd64"
-      ].join('/')
-
 remote_file 'fabio_release_binary' do
   path node['fabio']['install_path']
-  source url
+  source node['fabio']['release_url']
+  checksum node['fabio']['checksum']
   owner 'root'
   mode '0755'
   action :create

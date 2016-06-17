@@ -25,7 +25,7 @@ Requirements
 # Attributes
 This cookbook is attribute driven. List of attributes that you can change:
 
-* `node['fabio']['version']`         - Release to install. Check [fabio github](https://github.com/eBay/fabio/releases) for available releases (default '1.1.3').
+* `node['fabio']['release_url']`     - URL of release to install. Check [fabio github](https://github.com/eBay/fabio/releases) for available releases (cookbook tries to install '1.1.4' by default).
 * `node['fabio']['conf_dir']`        - Configuration directory (default '/etc/fabio/')
 * `node['fabio']['config']`          - Set config file options via hash of attributes `{'proxy.addr' => ':9999'}` becomes `proxy.addr = :9999` (default '{}')
 * `node['fabio']['log_dir']`         - Logs directory (default '/var/log/fabio/')
