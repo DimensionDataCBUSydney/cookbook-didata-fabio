@@ -19,7 +19,7 @@ directory node['fabio']['log_dir']
 
 template "#{node['fabio']['conf_dir']}/fabio.properties" do
   source 'fabio.properties.erb'
-  notifies :restart, 'poise_service[fabio]'
+  notifies :restart, "poise_service[#{node['fabio']['service_name']}]"
 end
 
 poise_service node['fabio']['service_name'] do

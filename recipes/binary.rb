@@ -21,5 +21,5 @@ remote_file 'fabio_release_binary' do
   owner 'root'
   mode '0755'
   action :create
-  notifies :restart, 'poise_service[fabio]', :delayed
+  notifies :restart, "poise_service[#{node['fabio']['service_name']}]", :delayed
 end
