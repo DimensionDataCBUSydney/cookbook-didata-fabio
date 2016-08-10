@@ -22,7 +22,7 @@ template "#{node['fabio']['conf_dir']}/fabio.properties" do
   notifies :restart, 'poise_service[fabio]'
 end
 
-poise_service 'fabio' do
+poise_service node['fabio']['service_name'] do
   # hacky way to set ulimit without modifying service template
   command "bash -c 'ulimit -n #{node['fabio']['open_files']}; \
     exec #{node['fabio']['install_path']} -cfg #{node['fabio']['conf_dir']}/fabio.properties"
