@@ -15,11 +15,11 @@
 # limitations under the License.
 
 remote_file 'fabio_release_binary' do
-  path node['fabio']['install_path']
-  source node['fabio']['release_url']
-  checksum node['fabio']['checksum']
+  path node['didata-fabio']['install_path']
+  source node['didata-fabio']['release_url']
+  checksum node['didata-fabio']['checksum']
   owner 'root'
   mode '0755'
   action :create
-  notifies :restart, "poise_service[#{node['fabio']['service_name']}]", :delayed
+  notifies :restart, "poise_service[#{node['didata-fabio']['service_name']}]", :delayed
 end

@@ -14,17 +14,64 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-directory node['fabio']['conf_dir']
-directory node['fabio']['log_dir']
+poise_service_user 'fabio'
 
-template "#{node['fabio']['conf_dir']}/fabio.properties" do
-  source 'fabio.properties.erb'
-  notifies :restart, "poise_service[#{node['fabio']['service_name']}]"
+directory node['didata-fabio']['conf_dir'] do
+  owner 'fabio'
+
 end
 
-poise_service node['fabio']['service_name'] do
-   provider :runit
-  # hacky way to set ulimit without modifying service template
-  command "bash -c 'ulimit -n #{node['fabio']['open_files']}; \
-    exec #{node['fabio']['install_path']} -cfg #{node['fabio']['conf_dir']}/fabio.properties"
+directory node['didata-fabio']['log_dir'] do
+  owner 'fabio'
+end
+
+certificate=ssl_certificate 'fabio' do
+  namespace node['didata-fabio']['tls']
+  only_if node['didata-fabio']['tls']['enabled'].to_s
+end
+if certificate.nil?
+  node.default['didata-fabio']['config']=node['didata-fabio']['config'].merge(
+      'proxy.addr'=>":#{node['didata-fabio']['port']}",
+  )
+else
+  node.default['didata-fabio']['config']=node['didata-fabio']['config'].merge(
+      'proxy.addr'=>":#{node['didata-fabio']['port']};cs=tls;",
+      'proxy.cs'=>"cs=tls;type=file;cert=#{certificate.cert_path};key=#{certificate.key_path}"
+
+  )
+end
+
+template "#{node['didata-fabio']['conf_dir']}/fabio.properties" do
+  source 'fabio.properties.erb'
+  notifies :restart, "poise_service[#{node['didata-fabio']['service_name']}]"
+end
+
+
+poise_service node['didata-fabio']['service_name'] do
+  command "#{node['didata-fabio']['install_path']} -cfg #{node['didata-fabio']['conf_dir']}/fabio.properties"
+  user 'fabio'
+end
+poise_service_options node['didata-fabio']['service_name'] do
+  template 'sysvinit.service.erb'
+  for_provider :sysvinit
+  restart_on_update false
+end
+poise_service_options node['didata-fabio']['service_name'] do
+  template 'systemd.service.erb'
+  for_provider :systemd
+  restart_on_update false
+end
+
+
+
+firewall_rule 'fabio' do
+  protocol :tcp
+  port node['didata-fabio']['port']
+  action :create
+  command :allow
+end
+
+firewall_rule 'icmp' do
+  protocol :icmp
+  command  :allow
 end

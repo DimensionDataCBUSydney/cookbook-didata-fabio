@@ -14,8 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-directory node['fabio']['conf_dir']
+directory node['didata-fabio']['conf_dir']
 
-file "#{node['fabio']['conf_dir']}/registry" do
+file "#{node['didata-fabio']['conf_dir']}/registry" do
   content 'route add service-a example.service/ https://google.com/'
 end

@@ -14,5 +14,5 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_recipe 'fabio::binary'
-include_recipe 'fabio::configure'
+include_recipe 'didata-fabio::binary'
+include_recipe 'didata-fabio::configure'
