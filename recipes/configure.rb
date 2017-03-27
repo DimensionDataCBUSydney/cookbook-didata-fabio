@@ -8,10 +8,52 @@ directory node['didata-fabio']['log_dir'] do
   owner 'fabio'
 end
 
-certificate=ssl_certificate 'fabio' do
-  namespace node['didata-fabio']['tls']
-  only_if node['didata-fabio']['tls']['enabled'].to_s
+
+if node['didata-fabio']['tls']['enabled']
+  artifactory_private_data_bag = node['didata-fabio']['artifactory']['secret_databag']
+  apikey_private_data_bag_item = node['didata-fabio']['artifactory']['secret_databag_item']
+  apikey = chef_vault_item(artifactory_private_data_bag, apikey_private_data_bag_item)['key']
+
+#install the token sign certificate without the private key on all servers
+  cer_file=node['didata-fabio']['ssl_certificate']['pfx_file']
+
+  node.run_state['artifactPath'] =File.join(Chef::Config[:file_cache_path], cer_file)
+
+
+  ruby_block 'download_Artifacts' do
+    block do
+      configure_Artifactory(node['didata-fabio']['artifactory']['url'],apikey)
+      artifactPath = download_Artifacts(node['didata-fabio']['artifactory']['certificate-repo'],
+                                        cer_file,
+                                        '',
+                                        Chef::Config[:file_cache_path]
+      )
+      node.run_state['artifactPath'] = artifactPath
+    end
+    not_if { File.file? node.run_state['artifactPath'] }
+  end
+  log "Downloaded Artifact Path: #{node.run_state['artifactPath']}"
+
+
+  pfx_password = chef_vault_item(node['didata-fabio']['ssl_certificate']['secret_databag'], node['didata-fabio']['ssl_certificate']['secret_databag_item'])['password']
+
+  certificate=ssl_certificate 'fabio' do
+    namespace node['didata-fabio']['tls']
+  end
+
+
+  file node.run_state['artifactPath'] do
+    action :delete
+  end
+
+
+
 end
+
+
+
+
+
 if certificate.nil?
   node.default['didata-fabio']['config']=node['didata-fabio']['config'].merge(
       'proxy.addr' => ":#{node['didata-fabio']['port']}",

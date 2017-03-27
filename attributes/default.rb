@@ -16,3 +16,12 @@ default['didata-fabio']['release_url']  = 'https://github.com/eBay/fabio/release
 default['didata-fabio']['checksum']     = '259506179b6e0a255510a5a82436729ff8ff477ca859244d3fa22fecd51e38f8'
 
 default['didata-fabio']['tls']['enabled']=false
+default['didata-fabio']['artifactory']['secret_databag'] = 'artifactory_secrets'
+default['didata-fabio']['artifactory']['secret_databag_item'] = 'api_key'
+default['didata-fabio']['artifactory']['url'] = 'https://artifactory.devops.itaas-cloud.com'
+default['didata-fabio']['artifactory']['certificate-repo']='certificate-repo-local'
+default['didata-fabio']['didata_ca_certificate']['cer_file']='Didata_Clould_Root_CA.cer'
+default['didata-fabio']['didata_intermediate_certificate']['cer_file']='Didata_Clould_Int_CA.cer'
+default['didata-fabio']['ssl_certificate']['pfx_file']='star_ci_dimensiondata_cloud.pfx'
+default['didata-fabio']['ssl_certificate']['secret_databag']='certificate_secrets'
+default['didata-fabio']['ssl_certificate']['secret_databag_item']='star_ci_dimensiondata_cloud.pfx'
