@@ -10,6 +10,7 @@ end
 
 certificate=ssl_certificate 'fabio' do
   namespace node['didata-fabio']['tls']
+  owner 'fabio'
   only_if node['didata-fabio']['tls']['enabled'].to_s
 end
 if certificate.nil?
@@ -23,11 +24,9 @@ else
   )
   directory certificate.cert_path do
     owner 'fabio'
-    mode '0644'
   end
   directory certificate.key_path do
     owner 'fabio'
-    mode '0640'
   end
 
 end
