@@ -1,3 +1,30 @@
+Chef::Recipe.send(:include, Vault::Helper)
+
+include_recipe 'chef-vault'
+
+vault_private_data_bag=node['devops_vault']['secret_databag']
+vault_private_data_bag_item=node['devops_vault']['secret_databag_item']
+token = chef_vault_item(vault_private_data_bag, vault_private_data_bag_item)['value']
+
+chef_gem 'vault'
+
+configure_vault(node['devops_vault']['url'],token)
+
+fabio_cert = get_vault_data(node['devops_vault']['root'],node['devops_vault']['fabio_cert_path'])
+
+certificate = fabio_cert.data[:certificate]
+private_key = fabio_cert.data[:private_key]
+
+file "#{node['didata-fabio']['tls']['ssl_cert']['path']}" do
+  content certificate
+  owner fabio
+end
+
+file "#{node['didata-fabio']['tls']['ssl_key']['path']}" do
+  content private_key
+  owner fabio
+end
+
 poise_service_user 'fabio'
 
 directory node['didata-fabio']['conf_dir'] do
