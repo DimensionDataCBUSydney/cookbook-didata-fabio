@@ -17,12 +17,12 @@ private_key = fabio_cert.data[:private_key]
 
 file "#{node['didata-fabio']['tls']['ssl_cert']['path']}" do
   content certificate
-  owner fabio
+  owner 'fabio'
 end
 
 file "#{node['didata-fabio']['tls']['ssl_key']['path']}" do
   content private_key
-  owner fabio
+  owner 'fabio'
 end
 
 poise_service_user 'fabio'
