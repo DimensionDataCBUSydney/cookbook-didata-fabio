@@ -15,6 +15,10 @@ fabio_cert = get_vault_data(node['devops_vault']['root'],node['devops_vault']['f
 certificate = fabio_cert.data[:certificate]
 private_key = fabio_cert.data[:private_key]
 
+
+
+poise_service_user 'fabio'
+
 file "#{node['didata-fabio']['tls']['ssl_cert']['path']}" do
   content certificate
   owner 'fabio'
@@ -24,8 +28,6 @@ file "#{node['didata-fabio']['tls']['ssl_key']['path']}" do
   content private_key
   owner 'fabio'
 end
-
-poise_service_user 'fabio'
 
 directory node['didata-fabio']['conf_dir'] do
   owner 'fabio'
