@@ -1,33 +1,96 @@
 ---
 driver:
-  name: vagrant
+  name: docker
+  binary: docker
+  socket: tcp://docker-host:2375
+  use_sudo: false
+  provision_command:
+    - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+    - systemctl enable sshd.service
+    - curl -L https://www.chef.io/chef/install.sh | bash -s -- -v 12.18.31
+  privileged: true
+  publish_all: true
+  run_options:
+    net: bridge
+    cap-add: SYS_ADMIN
 
 
 provisioner:
-  name: nodes
-  require_chef_omnibus: 12.18.31
-  # chef_omnibus_url: file:///chef-pkgs/install.sh
-  # environments_path: test/environments
+  name: chef_solo
   data_bags_path: test/integration/data_bags
-  # client_rb:
-  #   environment: kitchen
 
 verifier:
   name: inspec
-
+  
 platforms:
   - name: centos-7.2
+    driver_config:
+      image: centos/systemd
+      run_command: /usr/sbin/init
+  # - name: ubuntu
+  # - name: debian
 
 suites:
   - name: fabio
-    driver:
-        vm_hostname: fabio
     run_list:
       - recipe[apt]
       - recipe[yum]
+      - recipe[firewall::default]
       - recipe[didata-fabio::default]
       - recipe[didata-fabio::binary]
       - recipe[didata-fabio::configure]
     attributes:
+      firewall:
+        allow_ssh: true
       chef-vault:
         databag_fallback: true
+
+
+---
+driver:
+  name: docker
+  binary: docker
+  # socket: tcp://docker-host:2375
+  use_sudo: false
+  provision_command:
+    - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+    - systemctl enable sshd.service
+    - curl -L https://www.chef.io/chef/install.sh | bash -s -- -v 12.18.31
+  privileged: true
+  publish_all: true
+  run_options:
+    net: bridge
+    cap-add: SYS_ADMIN
+
+
+provisioner:
+  name: chef_solo
+  data_bags_path: test/integration/data_bags
+
+verifier:
+  name: inspec
+  
+platforms:
+  - name: centos-7.2
+    driver_config:
+      image: centos/systemd
+      run_command: /usr/sbin/init
+  # - name: ubuntu
+  # - name: debian
+
+suites:
+  - name: fabio
+    run_list:
+      - recipe[apt]
+      - recipe[yum]
+      - recipe[firewall::default]
+      - recipe[didata-fabio::default]
+      - recipe[didata-fabio::binary]
+      - recipe[didata-fabio::configure]
+    attributes:
+      firewall:
+        allow_ssh: true
+      chef-vault:
+        databag_fallback: true
+
+
