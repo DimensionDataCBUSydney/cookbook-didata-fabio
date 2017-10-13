@@ -6,7 +6,12 @@ default['devops_vault']['fabio_cert_path'] = 'certificates/star_ci_dimensiondata
 
 default['didata-fabio']['init_style']   = 'runit'
 default['didata-fabio']['open_files']   = 65535
-default['didata-fabio']['config']       = {}
+default['didata-fabio']['config']       = {
+	 'registry.consul.tagprefix'=>"url_#{node.chef_environment}-",
+    'proxy.responseheadertimeout'=>'15s',
+    'proxy.keepalivetimeout'=>'15s',
+    'proxy.dialtimeout'=>'2m'
+}
 default['didata-fabio']['install_path'] = '/usr/local/bin/fabio'
 
 
@@ -17,9 +22,10 @@ default['didata-fabio']['service_name'] = 'fabio'
 default['didata-fabio']['port'] = 443
 
 
+
 # Installation source
-default['didata-fabio']['release_url']  = 'https://github.com/eBay/fabio/releases/download/v1.3.8/fabio-1.3.8-go1.7.5-linux_amd64'
-default['didata-fabio']['checksum']     = '259506179b6e0a255510a5a82436729ff8ff477ca859244d3fa22fecd51e38f8'
+default['didata-fabio']['release_url']  = 'https://github.com/fabiolb/fabio/releases/download/v1.5.2/fabio-1.5.2-go1.8.3-linux_amd64'
+default['didata-fabio']['checksum']     = '62c192a306f754b8279bf21808f725a6bae6b9de2caa59af06b62542f5e718b2'
 
 default['didata-fabio']['tls']['enabled']=false
 default['didata-fabio']['tls']['ssl_cert']['path'] = '/etc/pki/tls/certs/fabio.pem'
