@@ -48,7 +48,7 @@ if certificate.nil?
   )
 else
   node.default['didata-fabio']['config']=node['didata-fabio']['config'].merge(
-      'proxy.addr' => ":#{node['didata-fabio']['port']};cs=tls;",
+      'proxy.addr' => %Q(:#{node['didata-fabio']['port']};cs=tls;tlsmin=tls12;tlsciphers="0xc02c,0xcc13,0xc030,0xc02b,0xc02f,0xc023,0xc027"),
       'proxy.cs' => "cs=tls;type=file;cert=#{certificate.cert_path};key=#{certificate.key_path}"
   )
   directory certificate.cert_path do

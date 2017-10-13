@@ -1,30 +1,96 @@
 ---
-transport:
-  name: sftp
 driver:
   name: docker
-  binary: /usr/bin/docker
+  binary: docker
+  socket: tcp://docker-host:2375
   use_sudo: false
   provision_command:
-    - curl -L https://www.chef.io/chef/install.sh | bash -s -- -v 12.11.18
+    - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+    - systemctl enable sshd.service
+    - curl -L https://www.chef.io/chef/install.sh | bash -s -- -v 12.18.31
+  privileged: true
+  publish_all: true
+  run_options:
+    net: bridge
+    cap-add: SYS_ADMIN
+
 
 provisioner:
   name: chef_solo
+  data_bags_path: test/integration/data_bags
 
+verifier:
+  name: inspec
+  
 platforms:
-  - name: centos
-  - name: ubuntu
-  - name: debian
+  - name: centos-7.2
+    driver_config:
+      image: centos/systemd
+      run_command: /usr/sbin/init
+  # - name: ubuntu
+  # - name: debian
 
 suites:
-  - name: binary
+  - name: fabio
     run_list:
       - recipe[apt]
       - recipe[yum]
-      - recipe[fabio::_test_file]
-      - recipe[fabio::default]
+      - recipe[firewall::default]
+      - recipe[didata-fabio::default]
+      - recipe[didata-fabio::binary]
+      - recipe[didata-fabio::configure]
     attributes:
-      fabio:
-        config:
-          registry.backend: file
-          registry.file.path: /etc/fabio/registry
+      firewall:
+        allow_ssh: true
+      chef-vault:
+        databag_fallback: true
+
+
+---
+driver:
+  name: docker
+  binary: docker
+  # socket: tcp://docker-host:2375
+  use_sudo: false
+  provision_command:
+    - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
+    - systemctl enable sshd.service
+    - curl -L https://www.chef.io/chef/install.sh | bash -s -- -v 12.18.31
+  privileged: true
+  publish_all: true
+  run_options:
+    net: bridge
+    cap-add: SYS_ADMIN
+
+
+provisioner:
+  name: chef_solo
+  data_bags_path: test/integration/data_bags
+
+verifier:
+  name: inspec
+  
+platforms:
+  - name: centos-7.2
+    driver_config:
+      image: centos/systemd
+      run_command: /usr/sbin/init
+  # - name: ubuntu
+  # - name: debian
+
+suites:
+  - name: fabio
+    run_list:
+      - recipe[apt]
+      - recipe[yum]
+      - recipe[firewall::default]
+      - recipe[didata-fabio::default]
+      - recipe[didata-fabio::binary]
+      - recipe[didata-fabio::configure]
+    attributes:
+      firewall:
+        allow_ssh: true
+      chef-vault:
+        databag_fallback: true
+
+
