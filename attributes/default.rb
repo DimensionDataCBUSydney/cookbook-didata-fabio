@@ -8,9 +8,9 @@ default['didata-fabio']['init_style']   = 'runit'
 default['didata-fabio']['open_files']   = 65535
 default['didata-fabio']['config']       = {
 	 'registry.consul.tagprefix'=>"url_#{node.chef_environment}-",
-    'proxy.responseheadertimeout'=>'15s',
-    'proxy.keepalivetimeout'=>'15s',
-    'proxy.dialtimeout'=>'2m'
+    'proxy.responseheadertimeout'=>'4m',
+    'proxy.keepalivetimeout'=>'4m',
+    'proxy.dialtimeout'=>'4m'
 }
 default['didata-fabio']['install_path'] = '/usr/local/bin/fabio'
 

@@ -2,7 +2,7 @@
 driver:
   name: docker
   binary: docker
-  socket: tcp://docker-host:2375
+  socket: unix:///private/var/run/docker.sock
   use_sudo: false
   provision_command:
     - sed -i 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
