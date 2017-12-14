@@ -1,2 +1,4 @@
-source "https://supermarket.getchef.com"
+source 'https://artifactory.devops.itaas-cloud.com/api/chef/chef-virtual'
+
 metadata
+
